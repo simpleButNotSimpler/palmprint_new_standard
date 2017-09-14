@@ -1,15 +1,15 @@
 function report_palmcode_verif_dp()
 
-n1 = zeros(1, 22);
+n1 = zeros(1, 23);
 n2 = n1;
 n3 = n1;
 n4 = n1;
 total_pos = 0;
 total_neg = 0;
 
-error = [0 0.05 0.1 0.15 0.2 0.25 0.255 0.257 0.26 0.265 0.267 0.27 0.29 0.3 0.32 0.34 0.4 0.5 0.6 0.7 0.8 0.9];
+error = [0 0.05 0.1 0.15 0.2 0.25 0.255 0.257 0.26 0.263 0.265 0.267 0.27 0.29 0.3 0.32 0.34 0.4 0.5 0.6 0.7 0.8 0.9];
 
-parfor main_counter=1:2
+parfor main_counter=1:500
     disp(num2str(main_counter))
     im_prefix = strcat('p', num2str(main_counter));
     

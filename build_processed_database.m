@@ -77,12 +77,12 @@ for t=1:len
     %first edge response
     % tlow = percentile(imfirstedge, 80);
     % thigh = percentile(imfirstedge, 75);
-    len = size(imfirstedge, 1);
-    X = reshape(imfirstedge, 1, len*len);
-    threshold = prctile(X, [80,75]);
-    thigh = threshold(1);
-    tlow = threshold(2);
-    [imfirstcanny, ~] = cannys(imfirstedge, tlow, thigh);
+%     len = size(imfirstedge, 1);
+%     X = reshape(imfirstedge, 1, len*len);
+%     threshold = prctile(X, [80,75]);
+%     thigh = threshold(1);
+%     tlow = threshold(2);
+%     [imfirstcanny, ~] = cannys(imfirstedge, tlow, thigh);
 
     %second edge response
     % tlow = percentile(imsecondedge, 95);
@@ -92,7 +92,7 @@ for t=1:len
     threshold = prctile(X, [90, 75]);
     thigh = threshold(1);
     tlow = threshold(2);
-    [imsecondcanny, ~] = cannys(imsecondedge, 0.6, 0.8);
+    [imsecondcanny, ~] = cannys(imsecondedge, 0.5, 0.8);
     
     %clean the image
     im_cleaned = clean_palm(imsecondcanny, dist_threshold, error_threshold, area_threshold);

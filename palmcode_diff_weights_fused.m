@@ -21,28 +21,33 @@ function score = histo_diff(im1, im2, weights, range)
    for m=1:len
        for n=1:len
           block1 = im1(range(m):range(m+1)-1, range(n):range(n+1)-1);
-          block_weights = weights(range(m):range(m+1)-1, range(n):range(n+1)-1);
-          histo_vector1 = code_block_histo(block1, block_weights);
-
           block2 = im2(range(m):range(m+1)-1, range(n):range(n+1)-1);
           block_weights = weights(range(m):range(m+1)-1, range(n):range(n+1)-1);
-          histo_vector2 = code_block_histo(block2, block_weights);
           
-          score = score + sum(abs(histo_vector1 - histo_vector2)) / sum(histo_vector1);
+         [histo_vector, counter] = code_block_histo(block1, block2, block_weights);
+          
+          score = score + sum(abs(histo_vector)) / counter;
        end       
    end
    
    score = score / (len*len);
 end
 
-function hv = code_block_histo(im, block_weights)
-   hv = zeros(1, 9);
-   [row, col] = size(im);
+function [hv1, counter] = code_block_histo(im1, im2, block_weights)
+   hv1 = zeros(1, 9);
+   [row, col] = size(block_weights);
+   counter = 0;
    
    for t=1:row
        for k=1:col
-           idx = (im(t,k)/20) + 1;
-           hv(idx) =  hv(idx) + block_weights(t,k);
+           idx1 = (im1(t,k)/20) + 1;
+           idx2 = (im2(t,k)/20) + 1;
+           
+           inc = block_weights(t,k);
+           
+           hv1(idx1) =  hv1(idx1) + inc;
+           hv1(idx2) =  hv1(idx2) - inc;
+           counter = counter + inc;
        end
    end
 end
