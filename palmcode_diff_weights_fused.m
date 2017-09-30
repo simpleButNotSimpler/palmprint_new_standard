@@ -1,4 +1,4 @@
-function score = palmcode_diff_weights_fused(im1, im2, palm_im1, palm_im2)
+function score = palmcode_diff_weights_fused(im1, im2, palm_im1, palm_im2, bias)
 %take two palmcode and two cannys as input and output the difference of their histogram
     
     siz1 = size(im1);
@@ -10,7 +10,7 @@ function score = palmcode_diff_weights_fused(im1, im2, palm_im1, palm_im2)
     palm_im1(palm_im2 > 0) = 255;
     
     weights = ones(siz1);
-    weights(palm_im1 > 0) = 2;
+    weights(palm_im1 > 0) = bias;
     score = histo_diff(im1, im2, weights, blocks);
 end
 

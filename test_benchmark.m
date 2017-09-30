@@ -23,5 +23,7 @@ end
 
 %get the score form direct palmcode 
 tic
-score = direct_palmcode(dc_test_im, canny_test_im, database_dc,database_canny, 6)
+score = direct_palmcode_mex(dc_test_im, canny_test_im, database_dc,database_canny, 6, 1)
 toc
+
+scores = report_score_neg(dc_test, dc_db, canny_test, canny_db, im_len, db_len, 3);

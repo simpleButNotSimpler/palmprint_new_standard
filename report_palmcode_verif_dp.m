@@ -9,7 +9,7 @@ total_neg = 0;
 
 error = [0 0.05 0.1 0.15 0.2 0.25 0.255 0.257 0.26 0.263 0.265 0.267 0.27 0.29 0.3 0.32 0.34 0.4 0.5 0.6 0.7 0.8 0.9];
 
-parfor main_counter=1:500
+for main_counter=1:500
     disp(num2str(main_counter))
     im_prefix = strcat('p', num2str(main_counter));
     
@@ -75,7 +75,7 @@ function score = report_score(testimage, database, same)
            database(1) = [];
        end
        
-       gloabl_min = build_alignment_one(testimage(t).name, database);
+       gloabl_min = build_alignment_one(testimage(t).name, database)
        
        %score
        score = [score, gloabl_min];  
@@ -101,7 +101,7 @@ for counter=1:db_len
         continue
     end
     
-    score = palmcode_diff_weights_fused(dc_test_im, dc_db_im, canny_test_im, canny_db_im);
+    score = palmcode_diff_weights_fused(dc_test_im, dc_db_im, canny_test_im, canny_db_im, 3);
     
     %global_min
     gloabl_min = [gloabl_min, score];

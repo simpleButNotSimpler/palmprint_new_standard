@@ -3,11 +3,16 @@ function report_palmcode_recog()
 right_dp = zeros(1, 1);
 wrong_dp = right_dp;
 
+right_dp3 = right_dp;
+wrong_dp3 = right_dp;
+
+right_dp4 = right_dp;
+wrong_dp4 = right_dp;
 
 %parpool
 % parpool(4)
 
-for main_counter=1:10
+parfor main_counter=1:500
     disp(num2str(main_counter))
     im_prefix = strcat('p', num2str(main_counter), '_*.bmp');
     
@@ -23,28 +28,41 @@ for main_counter=1:10
        %get class (1xN array), same size as error
        [dp] = report_score(current_im_name);
        
-%        plot(1:numel(dp), dp, 'r*')
+%      plot(1:numel(dp), dp, 'r*')
        
        %min indexes
-       [~, dp_min_idx] = min(dp);
+       [~, dp_min_idx] = min(dp(:, 1));
+       [~, dp_min_idx3] = min(dp(:, 2));
+       [~, dp_min_idx4] = min(dp(:, 3));
        
        %verdicts
+       %1
        idx = (dp_min_idx == main_counter);
        right_dp = right_dp + idx;
        wrong_dp = wrong_dp + ~idx;
-
-       if ~idx(1)
-          fid = fopen('mismatched_dp.txt', 'a');
-          fprintf(fid, '%10s %3d \n', current_im_name, dp_min_idx(1));
-          fclose(fid);
-       end
+       
+       %3
+       idx = (dp_min_idx3 == main_counter);
+       right_dp3 = right_dp3 + idx;
+       wrong_dp3 = wrong_dp3 + ~idx;
+       
+       %4
+       idx = (dp_min_idx4 == main_counter);
+       right_dp4 = right_dp4 + idx;
+       wrong_dp4 = wrong_dp4 + ~idx;
     end
  end
 
 %write result to file
 fid = fopen('report_palmcode_recog_red.txt', 'w');
-fprintf(fid, '%s\n', 'DP (RED)');
+fprintf(fid, '%s \n%s \n', 'DP (RED)', 'bias: 1');
 fprintf(fid, '%4d %4d\n', [right_dp; wrong_dp]);
+
+fprintf(fid, '%s \n', 'bias: 3');
+fprintf(fid, '%4d %4d\n', [right_dp3; wrong_dp3]);
+
+fprintf(fid, '%s \n', 'bias: 4');
+fprintf(fid, '%4d %4d\n', [right_dp4; wrong_dp4]);
 fclose(fid);
 
 % delete(gcp('nocreate'))
@@ -55,7 +73,7 @@ end
 
 function dp = report_score(im_test_name)   
    %test the image against all the database
-   dp = zeros(500, 1) + inf;
+   dp = zeros(500, 3) + inf;
    
    dc_test_im = read_image(strcat('data\testimages\direction_code\', im_test_name));
    canny_test_im = read_image(strcat('data\testimages\canny\', im_test_name));
@@ -70,6 +88,8 @@ function dp = report_score(im_test_name)
        end
        
        %get the score form direct palmcode
-       dp(t, :) = direct_palmcode_mex(dc_test_im, canny_test_im, database_dc, database_canny, 6);
+       dp(t, 1) = direct_palmcode_mex(dc_test_im, canny_test_im, database_dc, database_canny, 6, 1);
+       dp(t, 2) = direct_palmcode_mex(dc_test_im, canny_test_im, database_dc, database_canny, 6, 3);
+       dp(t, 3) = direct_palmcode_mex(dc_test_im, canny_test_im, database_dc, database_canny, 6, 4);
    end
 end
